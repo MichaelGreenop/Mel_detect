@@ -7,12 +7,12 @@ import numpy as np
 
 
 # Load the pre-trained model from a pickle file
-@st.cache_resource
+@st.cache
 def load_model_one():
     with open('Mel_pca.pkl', 'rb') as file:
         model_one = pickle.load(file)
     return model_one
-
+@st.cache
 def load_model_two():
     with open('Mel_lda.pkl', 'rb') as file:
         model_two = pickle.load(file)
