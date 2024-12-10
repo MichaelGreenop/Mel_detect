@@ -29,7 +29,7 @@ def transform_2(model_two, data_2):
 
 # Streamlit app
 def main():
-    st.title("Melanoma Prediction App")
+    st.title("Myeloma Prediction App")
     
     # Upload CSV file
     uploaded_file = st.file_uploader("Choose a CSV file", type="csv")
@@ -42,27 +42,42 @@ def main():
         # Read the CSV file
         df = pd.read_csv(uploaded_file, header=None)
         #w = df[0]
-        spec = df[1].values.reshape((1, 6639)) 
+
+        if df.ndim == 1:
+            specs = df[1].values[1:].reshape((1, 6639))
+            names = pd.DataFrame(df.values[:1,1:].T, columns=['names']) 
+        else: 
+            specs = df.values[1:,1:].T
+            names = pd.DataFrame(df.values[:1,1:].T, columns=['names'])
+       
 
               
                 
-        # Transform using the PCA
-        model_1 = load_model_one()
-        value_1 = transform_1(model_1, spec)
+            # Transform using the PCA
+            model_1 = load_model_one()
+            value_1 = transform_1(model_1, specs)
         
-        # Make predictions with the LDA
-        model_2 = load_model_two()
-        value_2 = transform_2(model_2, value_1)
+            # Make predictions with the LDA
+            model_2 = load_model_two()
+            value_2 = transform_2(model_2, value_1)
+
+            converted = pd.DataFrame(np.where(value_2 == 1, "Disease", "Control"), columns=['Predictions'])
+        
+        
+            
+            pred_df = pd.concat([names, converted],axis=1)
+
+        st.write(pred_df)    
 
                        
         # Make prediction
         
-        if value_2 == 0:
-            st.write("Prediction: Control")
-        elif value_2 == 1:
-            st.write("Prediction: Disease")
-        else: 
-            st.write("Error")
+        #if value_2 == 0:
+        #    st.write("Prediction: Control")
+        #elif value_2 == 1:
+        #    st.write("Prediction: Disease")
+        #else: 
+        #    st.write("Error")
 
 
         
