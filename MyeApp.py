@@ -62,10 +62,11 @@ def main():
             value_2 = transform_2(model_2, value_1)
 
             converted = pd.DataFrame(np.where(value_2 == 1, "Disease", "Control"), columns=['Predictions'])
+            labels = pd.DataFrame(value_2, columns=['Pred Label'])
         
         
             
-            pred_df = pd.concat([names, converted],axis=1)
+            pred_df = pd.concat([names, converted, labels],axis=1)
 
         st.write(pred_df)    
 
